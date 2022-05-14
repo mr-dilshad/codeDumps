@@ -1,0 +1,28 @@
+Steps to add swagger to maven project:
+
+1. add the dependency:
+
+		<dependency>
+		 <groupId>io.springfox</groupId>
+		 <artifactId>springfox-boot-starter</artifactId>
+		 <version>3.0.0</version>
+		</dependency>
+
+2. Add the configuration:
+
+@Configuration
+@EnableSwagger2
+public class SwaggerConfig {
+	
+	@Bean
+    public Docket api() { 
+        return new Docket(DocumentationType.SWAGGER_2)  
+          .select()                                  
+          .apis(RequestHandlerSelectors.any())              
+          .paths(PathSelectors.any())                          
+          .build();                                           
+    }
+}
+
+3. Access the swagger ui at :
+localhost:<port>/swagger-ui/

@@ -1,0 +1,9 @@
+Set KubeConfig=C:/Users/P9169174/Downloads/config_scrd_sit_v2
+kubectl config view
+kubectl get pods
+kubectl logs scrd-8457f96c4c-gfnzj > scrd_log_sit--any name
+kubectl get replicaset
+kubectl delete pod <podname>
+
+C:/Users/P9169174/Downloads/MSS_application_properties
+

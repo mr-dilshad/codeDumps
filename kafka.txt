@@ -1,0 +1,100 @@
+The following properties are mandatory for a Kafka Producer.
+
+bootstrap.servers: This is the list of host:port pairs of brokers needed for Producer to establish an initial connection to the Kafka cluster. The list must have at least two pairs so that the producer can connect to the cluster during failures.
+
+key.serializer: The producer interface accepts parameterized types and objects to be sent as key-value pairs. However, brokers accept keys and values of messages as byte arrays. key.serializer is again the name of the class that serializes the keys of the records sent from Producer to byte arrays. It is the class that implements org.apache.kafka.common.serialization.Serializer interface.
+
+value.serializer: This is the name of the class that serializes the values of the records produced from Kafka.It is the class that implements org.apache.kafka.common.serialization.Serializer interface.
+
+
+---------
+
+
+The subsequent code snippet shows how to create a producer object in Java.
+
+private Properties kafkaProps = new Properties();
+kafkaProps.put("bootstrap.servers","broker1:9092,broker2:9092");
+kafkaProps.put("key.serializer",  "org.apache.kafka.common.serialization.StringSerializer");
+kafkaProps.put("value.serializer",  "org.apache.kafka.common.serialization.StringSerializer");
+
+producer = new KafkaProducer<String, String>(kafkaProps);
+
+-----------
+
+The following code snippet displays the creation of a ProducerRecord object in Java.
+
+ProducerRecord<String, String> record = 
+new ProducerRecord<>("CustomerCountry", "Precision Products","France");
+In the above code snippet, CustomerCountry is the topic name, Precision Products is the message key and France is the message value.
+
+----------
+
+The below code snippet is used to send the ProducerRecord to Kafka broker.
+
+    producer.send(record);
+
+-----------
+
+Properties props = new Properties();
+
+props.put("bootstrap.servers", "broker1:9092,broker2:9092");
+
+props.put("group.id", "CountryCounter");
+
+props.put("key.deserializer","org.apache.kafka.common.serialization.StringDeserializer");
+
+props.put("value.deserializer","org.apache.kafka.common.serialization.StringDeserializer");
+
+KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
+
+
+------------
+
+
+consumer.subscribe(Collections.singletonList("customerCountries"));
+
+
+------------
+
+
+try {
+   while (true) {
+         ConsumerRecords<String, String> records = consumer.poll(100);
+   for (ConsumerRecord<String, String> record : records)
+   {
+        log.debug("topic = %s, partition = %s, offset = %d, customer = %s, country = %s\n", record.topic(), record.partition(), record.offset(), record.key(), record.value());
+int updatedCount = 1;
+if (custCountryMap.countainsValue(record.value())) {
+          updatedCount = custCountryMap.get(record.value()) + 1;
+      }
+
+ custCountryMap.put(record.value(), updatedCount)
+ JSONObject json = new JSONObject(custCountryMap);
+ System.out.println(json.toString(4))
+      }
+     }
+   } finally {
+       consumer.close();
+  }
+
+
+
+--------------
+Install Kafka:
+
+mkdir /projects/challenge/kafka
+cd /projects/challenge/kafka
+curl "https://archive.apache.org/dist/kafka/2.8.1/kafka_2.12-2.8.1.tgz" -o kafka.tgz
+tar -xvzf kafka.tgz --strip 1
+rm bin/kafka-console-producer.sh > /dev/null 2>&1
+echo "Starting Zookeeper..."
+bin/zookeeper-server-start.sh config/zookeeper.properties > /dev/null 0>&1 &
+echo "Zookeeper Running!"
+echo "Starting Kafka Server..."
+bin/kafka-server-start.sh config/server.properties > /dev/null 0>&1 &
+sleep 5
+echo "Kafka Running!"
+bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic MyTopic --partitions 1 --replication-factor 1 > /dev/null
+echo "Done...!"
+
+
