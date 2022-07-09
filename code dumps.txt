@@ -5,5 +5,4 @@ kubectl logs scrd-8457f96c4c-gfnzj > scrd_log_sit--any name
 kubectl get replicaset
 kubectl delete pod <podname>
 
-C:/Users/P9169174/Downloads/MSS_application_properties
 

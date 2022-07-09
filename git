@@ -1,0 +1,6 @@
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh
+
+1. create ssh key
+2. add your private key to ssh-agent
+3. add your public key to github
+4. hurrah you are done!!
